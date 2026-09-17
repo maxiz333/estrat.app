@@ -2,7 +2,7 @@
    Cache dell'app shell per funzionare offline.
    Cambia CACHE_VERSION quando modifichi index.html per forzare l'aggiornamento. */
 
-const CACHE_VERSION = 'rattazzi-v2';
+const CACHE_VERSION = 'rattazzi-v3';
 const ASSETS = [
   './',
   './index.html',

@@ -267,9 +267,10 @@
     <div class="hint">Prendila gratis su <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a></div>
     <label>Modello</label>
     <select id="inpModel">
-      <option value="gemini-2.5-flash">gemini-2.5-flash (consigliato · gratis)</option>
-      <option value="gemini-2.0-flash">gemini-2.0-flash (più veloce)</option>
-      <option value="gemini-2.5-pro">gemini-2.5-pro (qualità top, quota ridotta)</option>
+      <option value="gemini-3.6-flash">gemini-3.6-flash (consigliato · gratis)</option>
+      <option value="gemini-3.5-flash">gemini-3.5-flash (alternativa stabile)</option>
+      <option value="gemini-3.5-flash-lite">gemini-3.5-flash-lite (più veloce)</option>
+      <option value="gemini-3.6-pro">gemini-3.6-pro (qualità top)</option>
     </select>
     <div class="actions">
       <button class="btn-ghost" id="btnCancelSettings">Annulla</button>
@@ -363,7 +364,7 @@ const state = {
   rows: [],
   settings: {
     apiKey: localStorage.getItem('rattazzi_apiKey') || '',
-    model: localStorage.getItem('rattazzi_model') || 'gemini-2.5-flash'
+    model: localStorage.getItem('rattazzi_model') || 'gemini-3.6-flash'
   }
 };
 
@@ -745,7 +746,7 @@ window.addEventListener('appinstalled', () => {
 });
 
 /* =========================================================
-   PWA — Banner istruzioni iOS (Safari non supporta beforeinstallprompt)
+   PWA — Banner istruzioni iOS
    ========================================================= */
 const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
 const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
