@@ -2,7 +2,7 @@
    Cache dell'app shell per funzionare offline.
    Cambia CACHE_VERSION quando modifichi index.html per forzare l'aggiornamento. */
 
-const CACHE_VERSION = 'rattazzi-v1';
+const CACHE_VERSION = 'rattazzi-v2';
 const ASSETS = [
   './',
   './index.html',
@@ -33,11 +33,9 @@ self.addEventListener('fetch', event => {
   const req = event.request;
   const url = new URL(req.url);
 
-  // Bypassa chiamate cross-origin (es. api.openai.com) e non-GET
   if (url.origin !== self.location.origin) return;
   if (req.method !== 'GET') return;
 
-  // Stale-while-revalidate per app shell
   event.respondWith(
     caches.match(req).then(cached => {
       const network = fetch(req).then(resp => {

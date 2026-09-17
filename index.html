@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Rattazzi · Estrattore Fatture</title>
 
-<!-- PWA -->
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#f5c518">
 <meta name="mobile-web-app-capable" content="yes">
@@ -18,9 +17,9 @@
 <style>
   :root{
     --bg:#0a0a0a; --surface:#141414; --surface2:#1c1c1c; --surface3:#232323;
-    --border:#2a2a2a; --border2:#333;
+    --border:#2a2a2a;
     --yellow:#f5c518; --yellow2:#ffd84a; --yellow-dim:#7a6410;
-    --green:#2ecc71; --red:#e74c3c; --orange:#ff9f43; --blue:#4a9eff;
+    --green:#2ecc71; --red:#e74c3c;
     --text:#eaeaea; --text-dim:#8a8a8a; --text-dim2:#5a5a5a;
     --radius:12px; --radius-sm:8px;
     --shadow:0 8px 32px rgba(0,0,0,.5);
@@ -140,6 +139,8 @@
   .modal input,.modal select{width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:10px 12px;border-radius:var(--radius-sm);font-family:inherit;font-size:13px;outline:none;transition:border .15s}
   .modal input:focus,.modal select:focus{border-color:var(--yellow)}
   .modal .actions{display:flex;gap:10px;justify-content:flex-end;margin-top:18px;flex-wrap:wrap}
+  .modal .hint{font-size:11px;color:var(--text-dim2);margin-top:6px;line-height:1.4}
+  .modal .hint a{color:var(--yellow);text-decoration:none}
 
   .toast{position:fixed;bottom:calc(24px + var(--safe-bot));left:50%;transform:translateX(-50%) translateY(120px);background:var(--surface3);border:1px solid var(--yellow);color:var(--text);padding:12px 20px;border-radius:var(--radius-sm);font-size:13px;font-weight:600;box-shadow:var(--shadow);opacity:0;transition:all .3s;z-index:2000;pointer-events:none;max-width:90vw;text-align:center}
   .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
@@ -191,7 +192,6 @@
 
 <div class="container">
 
-  <!-- Banner installazione iOS (Safari non ha beforeinstallprompt) -->
   <div class="ios-banner" id="iosBanner">
     <button class="close" id="iosClose">✕</button>
     <b>📲 Installa questa app sul tuo iPhone</b><br>
@@ -262,17 +262,15 @@
 <div class="modal-bg" id="modalBg">
   <div class="modal">
     <h3>⚙️ Impostazioni</h3>
-    <label>API Key (OpenAI)</label>
-    <input type="password" id="inpKey" placeholder="sk-...">
+    <label>API Key (Google Gemini)</label>
+    <input type="password" id="inpKey" placeholder="AIza...">
+    <div class="hint">Prendila gratis su <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a></div>
     <label>Modello</label>
     <select id="inpModel">
-      <option value="gpt-4o">gpt-4o (consigliato · preciso)</option>
-      <option value="gpt-4o-mini">gpt-4o-mini (economico · veloce)</option>
-      <option value="gpt-4.1">gpt-4.1</option>
-      <option value="gpt-4.1-mini">gpt-4.1-mini</option>
+      <option value="gemini-2.5-flash">gemini-2.5-flash (consigliato · gratis)</option>
+      <option value="gemini-2.0-flash">gemini-2.0-flash (più veloce)</option>
+      <option value="gemini-2.5-pro">gemini-2.5-pro (qualità top, quota ridotta)</option>
     </select>
-    <label>Endpoint (opzionale)</label>
-    <input type="text" id="inpEndpoint" placeholder="https://api.openai.com/v1/chat/completions">
     <div class="actions">
       <button class="btn-ghost" id="btnCancelSettings">Annulla</button>
       <button class="btn-primary" id="btnSaveSettings">Salva</button>
@@ -365,8 +363,7 @@ const state = {
   rows: [],
   settings: {
     apiKey: localStorage.getItem('rattazzi_apiKey') || '',
-    model: localStorage.getItem('rattazzi_model') || 'gpt-4o',
-    endpoint: localStorage.getItem('rattazzi_endpoint') || ''
+    model: localStorage.getItem('rattazzi_model') || 'gemini-2.5-flash'
   }
 };
 
@@ -468,13 +465,13 @@ function renderThumbs() {
 }
 
 /* =========================================================
-   ESTRAZIONE
+   ESTRAZIONE (Google Gemini)
    ========================================================= */
 btnExtract.addEventListener('click', extract);
 
 async function extract() {
   if (!state.settings.apiKey) {
-    showToast('Inserisci prima la API key ⚙️', 'err');
+    showToast('Inserisci prima la API key Gemini ⚙️', 'err');
     openSettings();
     return;
   }
@@ -485,27 +482,40 @@ async function extract() {
   loaderTxt.textContent = `Analisi di ${state.images.length} foto con ${state.settings.model}…`;
 
   try {
-    const endpoint = state.settings.endpoint || 'https://api.openai.com/v1/chat/completions';
-    const userContent = [
-      { type: 'text', text: `Analizza ${state.images.length} fattura/e Viglietta nell'ordine mostrato. Restituisci il JSON come da istruzioni.` },
-      ...state.images.map(im => ({ type: 'image_url', image_url: { url: im.dataUrl, detail: 'high' } }))
+    const model = state.settings.model;
+    const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(state.settings.apiKey)}`;
+
+    const parts = [
+      { text: `Analizza ${state.images.length} fattura/e Viglietta nell'ordine mostrato. Restituisci il JSON come da istruzioni.` }
     ];
+    for (const im of state.images) {
+      const m = im.dataUrl.match(/^data:(image\/[a-zA-Z+]+);base64,(.+)$/);
+      if (!m) continue;
+      parts.push({
+        inline_data: {
+          mime_type: m[1],
+          data: m[2]
+        }
+      });
+    }
+
+    const body = {
+      system_instruction: {
+        parts: [{ text: SYSTEM_PROMPT }]
+      },
+      contents: [
+        { role: 'user', parts }
+      ],
+      generationConfig: {
+        temperature: 0,
+        responseMimeType: 'application/json'
+      }
+    };
 
     const resp = await fetch(endpoint, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${state.settings.apiKey}`
-      },
-      body: JSON.stringify({
-        model: state.settings.model,
-        messages: [
-          { role: 'system', content: SYSTEM_PROMPT },
-          { role: 'user', content: userContent }
-        ],
-        response_format: { type: 'json_object' },
-        temperature: 0
-      })
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
     });
 
     if (!resp.ok) {
@@ -514,7 +524,7 @@ async function extract() {
     }
 
     const data = await resp.json();
-    let raw = data.choices?.[0]?.message?.content || '';
+    let raw = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
     raw = raw.replace(/^```(?:json)?\s*/i, '').replace(/```\s*$/i, '').trim();
 
     let parsed;
@@ -675,7 +685,6 @@ $('btnClear').addEventListener('click', () => {
 function openSettings() {
   $('inpKey').value = state.settings.apiKey;
   $('inpModel').value = state.settings.model;
-  $('inpEndpoint').value = state.settings.endpoint;
   $('modalBg').classList.add('show');
 }
 $('btnSettings').addEventListener('click', openSettings);
@@ -685,10 +694,8 @@ $('modalBg').addEventListener('click', e => { if (e.target === $('modalBg')) $('
 $('btnSaveSettings').addEventListener('click', () => {
   state.settings.apiKey = $('inpKey').value.trim();
   state.settings.model = $('inpModel').value;
-  state.settings.endpoint = $('inpEndpoint').value.trim();
   localStorage.setItem('rattazzi_apiKey', state.settings.apiKey);
   localStorage.setItem('rattazzi_model', state.settings.model);
-  localStorage.setItem('rattazzi_endpoint', state.settings.endpoint);
   $('modalBg').classList.remove('show');
   showToast('✓ Impostazioni salvate', 'ok');
 });
