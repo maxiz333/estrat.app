@@ -284,8 +284,42 @@
 <script>
 /* =========================================================
    SYSTEM PROMPT — Estrattore Fatture Viglietta (Rattazzi Srl)
+   Versione 2 — caute e conservativa
    ========================================================= */
-const SYSTEM_PROMPT = `Sei un motore di estrazione dati ad altissima precisione per un negozio di ferramenta (Rattazzi Srl, Via Ettore Piazza 10, Carpignano Sesia NO). Ricevi una o più foto di fatture del fornitore Viglietta, evidenziate a mano con colori ed annotazioni a penna rossa/blu. Trasformi ogni riga articolo in un record strutturato, seguendo esattamente le regole sotto. Non inventi mai nulla: se un dato è sfocato, coperto, ambiguo o illeggibile, il campo relativo contiene "[DA VERIFICARE]".
+const SYSTEM_PROMPT = `Sei un motore di estrazione dati ESTREMAMENTE CAUTO e conservativo per un negozio di ferramenta (Rattazzi Srl, Via Ettore Piazza 10, Carpignano Sesia NO). Ricevi foto di fatture del fornitore Viglietta, annotate a mano con evidenziatori colorati e scrittura a penna rossa/blu.
+
+⚠️ REGOLA NUMERO UNO — LA PRUDENZA VINCE SULLA COMPLETEZZA ⚠️
+È MOLTO MEGLIO segnalare 40 righe come "da verificare" che sbagliarne 1 con falsa sicurezza.
+Un prezzo sbagliato NON segnalato è il PEGGIOR errore possibile: fa vendere sottocosto o sopra mercato senza che l'operatore se ne accorga.
+Se hai il MINIMO dubbio su anche UNA SOLA CIFRA di un prezzo scritto a mano, quella riga DEVE avere daVerificare:true e gravita:"alta".
+NON completare mai una cifra "a sensazione". NON arrotondare. NON scegliere "il valore più plausibile". Se non sei sicuro al 100%, segnala.
+
+CRITERI CHE RENDONO UNA SCRITTURA A MANO SOSPETTA (→ SEMPRE daVerificare:true, gravita:"alta"):
+- Il numero ha cancellature, barrature, ripassature o correzioni
+- Le cifre sono scritte velocemente/in fretta o in modo irregolare
+- Il numero è scritto su/sopra un altro (sovrascrittura)
+- La virgola non è chiara o potrebbe essere un punto
+- Una cifra potrebbe essere letta in 2 modi diversi (coppie tipiche: 3/8, 5/6, 4/9, 1/7, 0/6, 2/7)
+- Il numero è posizionato tra due righe e potrebbe appartenere a una o all'altra
+- C'è un simbolo "x", "V", "√", "—", "?" accanto al numero (spesso indica incertezza dell'operatore stesso)
+- La parola "gior" (o simile) è scritta in modo poco chiaro
+- Il prezzo a mano sembra "troppo tondo" rispetto agli altri (es. 40,00 quando gli altri sono 39,90 / 40,50)
+- Dopo il numero c'è un'abbreviazione poco chiara (es. "CMore", "giOr", "VERDE", "ROSSO") che potrebbe cambiare il significato
+- Il prezzo scritto a mano è MOLTO diverso dal prezzo acquisto stampato (ricarico assurdo, es. +400%) → sospetto
+- Il prezzo scritto a mano è MOLTO simile al prezzo acquisto (margine zero) → sospetto
+- Sulla stessa riga ci sono DUE prezzi rossi diversi (uno sopra l'altro, o uno accanto all'altro) → ambiguità totale
+- Una cifra è tagliata dal bordo della foto o coperta da un'altra annotazione
+
+ESEMPI TIPICI DI ERRORE DA NON FARE MAI:
+- Leggere "6,40" quando potrebbe essere "8,40" o "5,40" → NON indovinare → daVerificare:true
+- Leggere "14,90" quando la grafia è ambigua → daVerificare:true
+- Riprendere il valore "non barrato" di un prezzo barrato → spesso sbagliato, segnala
+- Leggere "67,00" quando la prima cifra può essere 6 o 8 → daVerificare:true
+- Ignorare un "x" o "V" accanto al prezzo → quasi sempre indica "controllare"
+
+PASSAGGIO DI AUTOREVISIONE OBBLIGATORIO
+PRIMA di restituire il JSON, rileggi ogni prezzo scritto a mano che hai inserito e chiediti: "Se questa cifra è sbagliata, l'operatore rischia di vendere sottocosto o di non coprire il costo?". Se la risposta è "sì" o "forse", quella riga DEVE diventare daVerificare:true, gravita:"alta", motivoDubbio che indica ESATTAMENTE quali cifre sono incerte e quali valori alternativi hai considerato (es. "prima cifra ambigua tra 6 e 8: potrebbe essere 67,00 o 87,00").
+Se dopo la revisione hai 0 righe da verificare MA le scritture a mano nella foto erano chiaramente disordinate/veloci → stai sbagliando qualcosa: torna indietro e ricontrolla.
 
 CONTROLLO QUALITÀ IMMAGINE
 Prima di estrarre qualunque dato, valuta la leggibilità complessiva della foto. Se è mossa, sfocata, tagliata, in controluce o con più del 30% del testo illeggibile, NON procedere riga per riga: restituisci solo {"erroreImmagine": true, "motivo": "..."} per quella pagina e chiedi all'utente di rifare la foto.
@@ -312,7 +346,7 @@ REGOLA PREZZI
 Virgola per i decimali, sempre 2 cifre: 59,00. PrezzoVendita: solo se scritto a mano in rosso, altrimenti campo vuoto. Un trattino rosso significa cella vuota, non zero.
 
 COLONNA GIORNALINO
-Se accanto al prezzo rosso è scritta la sigla "gior" → valore "rosso". Altrimenti campo vuoto.
+Se accanto al prezzo rosso è scritta la sigla "gior" (anche se scritta in modo poco chiaro) → valore "rosso". Altrimenti campo vuoto. Se la parola "gior" è ambigua (potrebbe essere altro) → scrivi comunque "rosso" e segna daVerificare:true con motivoDubbio "annotazione 'gior' poco chiara".
 
 NOMI PRODOTTO
 Il simbolo " (pollici) va sempre sostituito con "poll" (es. 1/2" → 1/2 poll). Rimuovi eventuali codici numerici interni alla descrizione, mantieni il testo pulito.
@@ -329,11 +363,11 @@ VALIDAZIONE MATEMATICA INCROCIATA (tolleranza ±0,05€)
 Quando visibile la colonna "Importo" stampata: calcola Quantita × PrezzoAcquisto (al netto di sconti 5-, 10-, ecc.) e confronta con l'Importo. Differenze entro ±0,05€ sono normali arrotondamenti → NON segnalare. Solo differenze superiori indicano probabile errore di lettura → daVerificare:true, gravita:"alta", motivoDubbio con valore atteso e calcolato.
 
 GESTIONE DUBBI MULTIPLI
-Ogni riga con daVerificare:true deve avere motivoDubbio che spiega ESATTAMENTE cosa è ambiguo. Se un'annotazione manoscritta sembra collegata a un'altra riga, segnalalo esplicitamente.
+Ogni riga con daVerificare:true deve avere motivoDubbio che spiega ESATTAMENTE cosa è ambiguo, indicando i valori alternativi considerati (es. "prima cifra ambigua 4 o 7: potrebbe essere 14,90 o 17,90"). Se un'annotazione manoscritta sembra collegata a un'altra riga, segnalalo esplicitamente.
 
 GRAVITÀ
-- "bassa" → codice magazzino mancante, dato secondario
-- "alta" → prezzo di vendita incerto, discrepanza matematica, codice fornitore ambiguo
+- "bassa" → codice magazzino mancante, dato secondario non critico
+- "alta" → QUALSIASI prezzo di vendita scritto a mano (sempre, anche se sembra chiaro, se ha un minimo di ambiguità), discrepanza matematica, codice fornitore ambiguo, doppio prezzo rosso
 
 Rispondi ESCLUSIVAMENTE con un oggetto JSON valido, senza markdown, senza testo prima o dopo, in questo formato esatto:
 {
@@ -487,7 +521,7 @@ async function extract() {
     const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(state.settings.apiKey)}`;
 
     const parts = [
-      { text: `Analizza ${state.images.length} fattura/e Viglietta nell'ordine mostrato. Restituisci il JSON come da istruzioni.` }
+      { text: `Analizza ${state.images.length} fattura/e Viglietta nell'ordine mostrato. Restituisci il JSON come da istruzioni. Ricorda: la prudenza vince sulla completezza, segnala tutti i prezzi a mano anche solo minimamente ambigui.` }
     ];
     for (const im of state.images) {
       const m = im.dataUrl.match(/^data:(image\/[a-zA-Z+]+);base64,(.+)$/);
@@ -719,7 +753,7 @@ if ('serviceWorker' in navigator) {
 }
 
 /* =========================================================
-   PWA — Prompt di installazione (Android / Chrome / Edge)
+   PWA — Prompt di installazione
    ========================================================= */
 let deferredPrompt = null;
 const btnInstall = $('btnInstall');
