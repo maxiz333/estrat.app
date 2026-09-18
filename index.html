@@ -85,6 +85,22 @@
   }
   .panel-title::before{content:"";width:4px;height:14px;background:var(--yellow);border-radius:2px}
 
+  .group-input-row{
+    display:flex;align-items:center;gap:10px;margin-bottom:14px;
+    background:var(--surface2);border:1px solid var(--border);
+    border-radius:var(--radius-sm);padding:10px 14px;
+  }
+  .group-input-row label{
+    font-size:11px;color:var(--yellow);text-transform:uppercase;
+    letter-spacing:1px;font-weight:800;white-space:nowrap;
+  }
+  .group-input-row input{
+    flex:1;background:transparent;border:none;color:var(--text);
+    font-family:inherit;font-size:13px;outline:none;
+    padding:4px 0;
+  }
+  .group-input-row input::placeholder{color:var(--text-dim2);font-style:italic}
+
   .dropzone{
     border:2px dashed var(--yellow-dim);border-radius:var(--radius);
     padding:32px 18px;text-align:center;cursor:pointer;
@@ -98,16 +114,28 @@
   .dropzone .main{font-size:14px;font-weight:700;color:var(--yellow);margin-bottom:4px}
   .dropzone .hint{font-size:11px;color:var(--text-dim)}
 
-  .thumbs{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;margin-top:14px}
+  .thumbs{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;margin-top:14px}
   .thumb{position:relative;aspect-ratio:3/4;border-radius:var(--radius-sm);overflow:hidden;border:1px solid var(--border);background:#000}
-  .thumb img{width:100%;height:100%;object-fit:cover}
-  .thumb .num{position:absolute;top:5px;left:5px;background:var(--yellow);color:#111;font-size:11px;font-weight:800;padding:2px 7px;border-radius:4px}
-  .thumb .rm{position:absolute;top:5px;right:5px;background:rgba(0,0,0,.75);color:#fff;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;cursor:pointer;border:none;padding:0}
+  .thumb img{width:100%;height:100%;object-fit:cover;cursor:zoom-in}
+  .thumb .num{position:absolute;top:5px;left:5px;background:var(--yellow);color:#111;font-size:11px;font-weight:800;padding:2px 7px;border-radius:4px;z-index:2}
+  .thumb .rm{position:absolute;top:5px;right:5px;background:rgba(0,0,0,.75);color:#fff;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;cursor:pointer;border:none;padding:0;z-index:2}
   .thumb .rm:hover{background:var(--red)}
+  .thumb .movers{
+    position:absolute;bottom:0;left:0;right:0;display:flex;
+    background:linear-gradient(0deg,rgba(0,0,0,.9),rgba(0,0,0,0));
+    padding:20px 4px 4px;
+    justify-content:space-between;gap:4px;z-index:2;
+  }
+  .thumb .movers button{
+    background:rgba(245,197,24,.9);color:#111;border:none;
+    padding:3px 9px;font-size:12px;font-weight:900;border-radius:4px;
+    cursor:pointer;min-width:28px;justify-content:center;
+  }
+  .thumb .movers button:disabled{opacity:.25;cursor:not-allowed}
 
   .table-wrap{overflow:auto;border-radius:var(--radius-sm);border:1px solid var(--border);max-height:60vh;-webkit-overflow-scrolling:touch}
-  table{width:100%;border-collapse:collapse;font-size:12.5px;min-width:1100px}
-  thead th{position:sticky;top:0;background:var(--surface3);color:var(--yellow);font-size:10.5px;text-transform:uppercase;letter-spacing:.8px;padding:10px 8px;text-align:left;font-weight:800;border-bottom:2px solid var(--yellow);z-index:2}
+  table{width:100%;border-collapse:collapse;font-size:12.5px;min-width:1200px}
+  thead th{position:sticky;top:0;background:var(--surface3);color:var(--yellow);font-size:10.5px;text-transform:uppercase;letter-spacing:.8px;padding:10px 8px;text-align:left;font-weight:800;border-bottom:2px solid var(--yellow);z-index:3}
   thead th.center{text-align:center}
   tbody tr{border-bottom:1px solid var(--border);transition:background .1s}
   tbody tr:hover{background:rgba(245,197,24,.04)}
@@ -120,20 +148,44 @@
   tbody td.num input{text-align:right;font-variant-numeric:tabular-nums}
   tbody td.center input{text-align:center}
   .price-v{color:var(--green);font-weight:600}
+  .total-cell{text-align:right;font-variant-numeric:tabular-nums;color:var(--yellow);font-weight:600;padding-right:12px}
 
-  .row-badge{display:inline-block;padding:2px 7px;border-radius:4px;font-size:10px;font-weight:800;letter-spacing:.5px}
+  tr.group-header td{
+    background:linear-gradient(90deg,rgba(245,197,24,.12),transparent 80%);
+    color:var(--yellow);font-weight:800;font-size:11px;
+    letter-spacing:1.2px;text-transform:uppercase;
+    padding:10px 14px;
+    border-top:2px solid var(--yellow-dim);
+    border-bottom:1px solid var(--yellow-dim);
+    position:sticky;top:36px;z-index:2;
+  }
+  tr.group-header td .count{
+    color:var(--text-dim);font-size:10px;font-weight:600;
+    letter-spacing:.5px;margin-left:8px;text-transform:none;
+  }
+
+  .row-badge{display:inline-block;padding:2px 7px;border-radius:4px;font-size:10px;font-weight:800;letter-spacing:.5px;cursor:help}
   .badge-alta{background:rgba(231,76,60,.2);color:var(--red)}
   .badge-bassa{background:rgba(245,197,24,.2);color:var(--yellow)}
+  .badge-ok{color:var(--green);font-weight:800}
 
-  .stats{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
-  .stat{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 14px;display:flex;align-items:center;gap:10px;min-width:110px;flex:1}
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:10px;margin-bottom:14px}
+  .stat{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 14px;display:flex;align-items:center;gap:10px}
   .stat .v{font-size:20px;font-weight:800;color:var(--yellow)}
-  .stat .l{font-size:10px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.8px}
-  .stat.warn .v{color:var(--red)}
+  .stat .l{font-size:10px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.8px;line-height:1.2}
+  .stat.alta .v{color:var(--red)}
+  .stat.bassa .v{color:var(--yellow)}
+  .stat.ok .v{color:var(--green)}
+
+  .filter-bar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;padding:8px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm)}
+  .filter-bar button{padding:6px 12px;font-size:12px;background:transparent;color:var(--text-dim);border:1px solid transparent}
+  .filter-bar button:hover{color:var(--text);background:var(--surface3)}
+  .filter-bar button.active{background:var(--yellow);color:#111;border-color:var(--yellow);font-weight:800}
 
   .modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.85);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;z-index:1000;padding:16px}
   .modal-bg.show{display:flex}
   .modal{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:22px;width:100%;max-width:480px;box-shadow:var(--shadow)}
+  .modal.modal-wide{max-width:720px}
   .modal h3{color:var(--yellow);font-size:14px;text-transform:uppercase;letter-spacing:1px;margin-bottom:14px}
   .modal label{display:block;font-size:11px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.8px;margin:12px 0 6px}
   .modal input,.modal select{width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:10px 12px;border-radius:var(--radius-sm);font-family:inherit;font-size:13px;outline:none;transition:border .15s}
@@ -141,6 +193,25 @@
   .modal .actions{display:flex;gap:10px;justify-content:flex-end;margin-top:18px;flex-wrap:wrap}
   .modal .hint{font-size:11px;color:var(--text-dim2);margin-top:6px;line-height:1.4}
   .modal .hint a{color:var(--yellow);text-decoration:none}
+
+  .session-list{max-height:50vh;overflow-y:auto;margin-top:12px;padding-right:4px}
+  .session-item{
+    display:flex;align-items:center;justify-content:space-between;gap:12px;
+    padding:12px 14px;border:1px solid var(--border);border-radius:var(--radius-sm);
+    margin-bottom:8px;background:var(--surface2);transition:border .15s;
+  }
+  .session-item:hover{border-color:var(--yellow-dim)}
+  .session-item .info{flex:1;min-width:0}
+  .session-item .name{font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:13px}
+  .session-item .meta{font-size:11px;color:var(--text-dim);margin-top:3px}
+  .session-item .actions{display:flex;gap:6px;flex-shrink:0;flex-wrap:wrap}
+  .session-item .actions button{padding:6px 10px;font-size:11px}
+
+  .empty-state{text-align:center;padding:30px 20px;color:var(--text-dim2);font-size:12px;font-style:italic}
+
+  #zoomModal{background:rgba(0,0,0,.96);padding:0;cursor:zoom-out}
+  #zoomModal img{max-width:100vw;max-height:100vh;object-fit:contain;display:block}
+  #zoomModal .close-hint{position:fixed;top:20px;right:20px;background:var(--yellow);color:#111;padding:8px 14px;border-radius:var(--radius-sm);font-weight:800;font-size:13px;pointer-events:none}
 
   .toast{position:fixed;bottom:calc(24px + var(--safe-bot));left:50%;transform:translateX(-50%) translateY(120px);background:var(--surface3);border:1px solid var(--yellow);color:var(--text);padding:12px 20px;border-radius:var(--radius-sm);font-size:13px;font-weight:600;box-shadow:var(--shadow);opacity:0;transition:all .3s;z-index:2000;pointer-events:none;max-width:90vw;text-align:center}
   .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
@@ -151,6 +222,10 @@
   .loader.show{display:flex}
   .spinner{width:18px;height:18px;border:2px solid var(--yellow-dim);border-top-color:var(--yellow);border-radius:50%;animation:spin .8s linear infinite;flex-shrink:0}
   @keyframes spin{to{transform:rotate(360deg)}}
+
+  .restore-banner{display:none;background:linear-gradient(135deg,#1a1a0a,#141414);border:1px solid var(--yellow);border-radius:var(--radius);padding:12px 16px;margin-bottom:16px;font-size:12.5px;position:relative}
+  .restore-banner.show{display:block}
+  .restore-banner b{color:var(--yellow)}
 
   .ios-banner{display:none;background:linear-gradient(135deg,#1a1a1a,#141414);border:1px solid var(--yellow);border-radius:var(--radius);padding:14px 16px;margin-bottom:16px;font-size:12.5px;position:relative}
   .ios-banner.show{display:block}
@@ -168,9 +243,14 @@
     .container{padding:14px}
     .panel{padding:14px}
     .btn-icon{width:36px;height:36px;padding:8px}
-    .stat{min-width:80px;padding:8px 10px}
+    .stat{padding:8px 10px}
     .stat .v{font-size:17px}
     .stat .l{font-size:9px}
+    .thumbs{grid-template-columns:repeat(auto-fill,minmax(110px,1fr))}
+    .group-input-row{flex-direction:column;align-items:stretch;gap:6px}
+    .group-input-row label{text-align:left}
+    .session-item{flex-direction:column;align-items:stretch}
+    .session-item .actions{justify-content:flex-end}
   }
 </style>
 </head>
@@ -198,12 +278,20 @@
     Tocca <span class="share-ic">⬆️</span> in basso, poi <b>“Aggiungi a Home”</b>.
   </div>
 
+  <div class="restore-banner" id="restoreBanner"></div>
+
   <div class="panel">
     <div class="panel-title">1 · Carica foto fatture</div>
+
+    <div class="group-input-row">
+      <label>🗂️ Etichetta fattura</label>
+      <input type="text" id="inpGroupLabel" placeholder="es. Fattura 37229 del 16/09 — lascia vuoto se non vuoi raggruppare">
+    </div>
+
     <div class="dropzone" id="dropzone">
       <div class="icon">📄</div>
       <div class="main">Tocca o trascina le foto qui</div>
-      <div class="hint">JPG · PNG · HEIC — più pagine supportate</div>
+      <div class="hint">JPG · PNG · HEIC — più pagine supportate · tap per ingrandire · ◀ ▶ per riordinare</div>
       <input type="file" id="fileInput" accept="image/*" multiple hidden>
     </div>
     <div class="thumbs" id="thumbs"></div>
@@ -212,21 +300,34 @@
   <div class="panel">
     <div class="panel-title">2 · Elabora</div>
     <button class="btn-primary" id="btnExtract" disabled>✨ Estrai dati dalle foto</button>
-    <button class="btn-ghost" id="btnClear" style="margin-left:8px">🗑️ Pulisci</button>
+    <button class="btn-ghost" id="btnClear" style="margin-left:8px">🗑️ Pulisci tutto</button>
     <div class="loader" id="loader"><div class="spinner"></div><span id="loaderTxt">Analisi in corso…</span></div>
   </div>
 
   <div class="panel" id="resultsPanel" style="display:none">
     <div class="panel-title">3 · Anteprima & esportazione</div>
+
     <div class="stats">
       <div class="stat"><div class="v" id="stRows">0</div><div class="l">Righe</div></div>
-      <div class="stat warn"><div class="v" id="stDub">0</div><div class="l">Da verificare</div></div>
-      <div class="stat"><div class="v" id="stOk">0</div><div class="l">Affidabili</div></div>
+      <div class="stat alta"><div class="v" id="stAlta">0</div><div class="l">Dubbio alto</div></div>
+      <div class="stat bassa"><div class="v" id="stBassa">0</div><div class="l">Dubbio basso</div></div>
+      <div class="stat ok"><div class="v" id="stOk">0</div><div class="l">Affidabili</div></div>
+      <div class="stat"><div class="v" id="stTot">0,00</div><div class="l">€ Totale acq.</div></div>
+    </div>
+
+    <div class="filter-bar" id="filterBar">
+      <button data-filter="all" class="active">📋 Tutte</button>
+      <button data-filter="alta">🔴 Solo dubbio alto</button>
+      <button data-filter="bassa">🟡 Solo dubbio basso</button>
+      <button data-filter="dub">⚠️ Tutti i dubbi</button>
+      <button data-filter="ok">✓ Solo affidabili</button>
     </div>
 
     <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px">
       <button class="btn-primary" id="btnCsv">⬇️ Esporta CSV</button>
       <button class="btn-ghost" id="btnCopy">📋 Copia CSV</button>
+      <button class="btn-ghost" id="btnAddRow">➕ Aggiungi riga</button>
+      <button class="btn-ghost" id="btnOpenHistory">📚 Storico</button>
       <button class="btn-danger" id="btnClearRows">🗑️ Svuota</button>
     </div>
 
@@ -238,13 +339,14 @@
             <th>Nome prodotto</th>
             <th style="width:130px">Cod. Fornitore</th>
             <th style="width:110px">Cod. Magazzino</th>
-            <th style="width:70px" class="center">U.M.</th>
+            <th style="width:60px" class="center">U.M.</th>
             <th style="width:70px" class="center">Qtà</th>
-            <th style="width:90px" class="center">€ Acq.</th>
-            <th style="width:90px" class="center">€ Vend.</th>
-            <th style="width:60px" class="center">Gior.</th>
-            <th style="width:80px" class="center">Stato</th>
-            <th style="width:40px"></th>
+            <th style="width:85px" class="center">€ Acq.</th>
+            <th style="width:85px" class="center">€ Vend.</th>
+            <th style="width:55px" class="center">Gior.</th>
+            <th style="width:85px" class="center">Totale</th>
+            <th style="width:75px" class="center">Stato</th>
+            <th style="width:70px" class="center"></th>
           </tr>
         </thead>
         <tbody id="tbody"></tbody>
@@ -279,47 +381,65 @@
   </div>
 </div>
 
+<div class="modal-bg" id="historyModal">
+  <div class="modal modal-wide">
+    <h3>📚 Storico sessioni</h3>
+
+    <label>💾 Salva la sessione corrente</label>
+    <div style="display:flex;gap:8px;align-items:stretch">
+      <input type="text" id="inpSessionName" placeholder="Nome sessione (es. Fattura 37229 del 16/09)" style="flex:1">
+      <button class="btn-primary" id="btnSaveCurrentSession">💾 Salva</button>
+    </div>
+
+    <label style="margin-top:20px">📂 Sessioni salvate</label>
+    <div class="session-list" id="sessionList"></div>
+
+    <div class="actions">
+      <button class="btn-ghost" id="btnCloseHistory">Chiudi</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-bg" id="zoomModal">
+  <img id="zoomImg" src="" alt="">
+  <div class="close-hint">✕ Chiudi</div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
 /* =========================================================
-   SYSTEM PROMPT — Estrattore Fatture Viglietta (Rattazzi Srl)
-   Versione 2 — caute e conservativa
+   SYSTEM PROMPT v3 — Bilanciata
    ========================================================= */
-const SYSTEM_PROMPT = `Sei un motore di estrazione dati ESTREMAMENTE CAUTO e conservativo per un negozio di ferramenta (Rattazzi Srl, Via Ettore Piazza 10, Carpignano Sesia NO). Ricevi foto di fatture del fornitore Viglietta, annotate a mano con evidenziatori colorati e scrittura a penna rossa/blu.
+const SYSTEM_PROMPT = `Sei un motore di estrazione dati per un negozio di ferramenta (Rattazzi Srl, Via Ettore Piazza 10, Carpignano Sesia NO). Ricevi foto di fatture del fornitore Viglietta, annotate a mano con evidenziatori colorati e scrittura a penna rossa/blu.
 
-⚠️ REGOLA NUMERO UNO — LA PRUDENZA VINCE SULLA COMPLETEZZA ⚠️
-È MOLTO MEGLIO segnalare 40 righe come "da verificare" che sbagliarne 1 con falsa sicurezza.
-Un prezzo sbagliato NON segnalato è il PEGGIOR errore possibile: fa vendere sottocosto o sopra mercato senza che l'operatore se ne accorga.
-Se hai il MINIMO dubbio su anche UNA SOLA CIFRA di un prezzo scritto a mano, quella riga DEVE avere daVerificare:true e gravita:"alta".
-NON completare mai una cifra "a sensazione". NON arrotondare. NON scegliere "il valore più plausibile". Se non sei sicuro al 100%, segnala.
+🎯 FILOSOFIA: EQUILIBRIO TRA PRUDENZA E FIDUCIA 🎯
+Il tuo obiettivo è segnalare SOLO i casi in cui c'è un dubbio REALE e CONCRETO su un valore che impatta il margine o l'identificazione dell'articolo.
+- Se il prezzo scritto a mano è LEGGIBILE SENZA SFORZO → FIDATI, scrivi il valore e NON segnalare (daVerificare:false).
+- Se il prezzo è scritto in modo ambiguo, corretto, sovrapposto, o hai un dubbio su UNA cifra specifica → SEGNALA (daVerificare:true).
+- Se una cella è VUOTA (nessun prezzo scritto) → lascia prezzoVendita:"" e NON segnalare.
+Non segnalare MAI una riga "per principio" solo perché il prezzo è scritto a mano.
 
-CRITERI CHE RENDONO UNA SCRITTURA A MANO SOSPETTA (→ SEMPRE daVerificare:true, gravita:"alta"):
-- Il numero ha cancellature, barrature, ripassature o correzioni
-- Le cifre sono scritte velocemente/in fretta o in modo irregolare
-- Il numero è scritto su/sopra un altro (sovrascrittura)
-- La virgola non è chiara o potrebbe essere un punto
-- Una cifra potrebbe essere letta in 2 modi diversi (coppie tipiche: 3/8, 5/6, 4/9, 1/7, 0/6, 2/7)
-- Il numero è posizionato tra due righe e potrebbe appartenere a una o all'altra
-- C'è un simbolo "x", "V", "√", "—", "?" accanto al numero (spesso indica incertezza dell'operatore stesso)
-- La parola "gior" (o simile) è scritta in modo poco chiaro
-- Il prezzo a mano sembra "troppo tondo" rispetto agli altri (es. 40,00 quando gli altri sono 39,90 / 40,50)
-- Dopo il numero c'è un'abbreviazione poco chiara (es. "CMore", "giOr", "VERDE", "ROSSO") che potrebbe cambiare il significato
-- Il prezzo scritto a mano è MOLTO diverso dal prezzo acquisto stampato (ricarico assurdo, es. +400%) → sospetto
-- Il prezzo scritto a mano è MOLTO simile al prezzo acquisto (margine zero) → sospetto
-- Sulla stessa riga ci sono DUE prezzi rossi diversi (uno sopra l'altro, o uno accanto all'altro) → ambiguità totale
-- Una cifra è tagliata dal bordo della foto o coperta da un'altra annotazione
+✅ SEGNALA daVerificare:true, gravita:"alta" SOLO se si verifica ALMENO UNA di queste 10 condizioni:
+1. Una cifra del prezzo è ambigua tra DUE valori possibili (es. "6" che può essere "8", "4" che può essere "9")
+2. La virgola decimale è assente o ambigua (es. "1250" potrebbe essere 12,50 o 125,0)
+3. Il prezzo ha cancellature, ripassature o correzioni visibili a penna
+4. Ci sono DUE prezzi diversi sovrapposti o uno sopra l'altro sulla stessa riga
+5. Il prezzo è posizionato TRA due righe e non si capisce a quale appartenga
+6. Il prezzo è tagliato dal bordo della foto o coperto da un'altra annotazione
+7. C'è un simbolo "X", "V", "√", "?" o una barratura accanto al prezzo che ne mette in dubbio il valore
+8. Il prezzo di vendita è molto diverso dal prezzo acquisto (ricarico > 400% o margine < 0% → vendita sottocosto)
+9. Il calcolo Quantità × PrezzoAcquisto (al netto sconti) non torna con l'Importo stampato (differenza > 0,05€)
+10. Il codice fornitore o codice magazzino è PARZIALMENTE illeggibile (alcuni caratteri coperti o sfocati)
 
-ESEMPI TIPICI DI ERRORE DA NON FARE MAI:
-- Leggere "6,40" quando potrebbe essere "8,40" o "5,40" → NON indovinare → daVerificare:true
-- Leggere "14,90" quando la grafia è ambigua → daVerificare:true
-- Riprendere il valore "non barrato" di un prezzo barrato → spesso sbagliato, segnala
-- Leggere "67,00" quando la prima cifra può essere 6 o 8 → daVerificare:true
-- Ignorare un "x" o "V" accanto al prezzo → quasi sempre indica "controllare"
-
-PASSAGGIO DI AUTOREVISIONE OBBLIGATORIO
-PRIMA di restituire il JSON, rileggi ogni prezzo scritto a mano che hai inserito e chiediti: "Se questa cifra è sbagliata, l'operatore rischia di vendere sottocosto o di non coprire il costo?". Se la risposta è "sì" o "forse", quella riga DEVE diventare daVerificare:true, gravita:"alta", motivoDubbio che indica ESATTAMENTE quali cifre sono incerte e quali valori alternativi hai considerato (es. "prima cifra ambigua tra 6 e 8: potrebbe essere 67,00 o 87,00").
-Se dopo la revisione hai 0 righe da verificare MA le scritture a mano nella foto erano chiaramente disordinate/veloci → stai sbagliando qualcosa: torna indietro e ricontrolla.
+❌ NON segnalare nei seguenti casi (FALSI POSITIVI da evitare):
+- Prezzo scritto a mano in grafia chiara e leggibile → daVerificare:false
+- Annotazione "gior" chiara accanto al prezzo → daVerificare:false, giornalino:"rosso"
+- Campo prezzo VUOTO → prezzoVendita:"" e daVerificare:false
+- Riga "SOST./INTEGRAZIONE" senza prezzo → già caso speciale, non è dubbio
+- Riga "VILLATA" → prezzoVendita vuoto, non è dubbio
+- Codice fornitore/verde perfettamente leggibile → non è dubbio
+- Piccole differenze di arrotondamento (≤ 0,05€) → non è dubbio
 
 CONTROLLO QUALITÀ IMMAGINE
 Prima di estrarre qualunque dato, valuta la leggibilità complessiva della foto. Se è mossa, sfocata, tagliata, in controluce o con più del 30% del testo illeggibile, NON procedere riga per riga: restituisci solo {"erroreImmagine": true, "motivo": "..."} per quella pagina e chiedi all'utente di rifare la foto.
@@ -346,7 +466,7 @@ REGOLA PREZZI
 Virgola per i decimali, sempre 2 cifre: 59,00. PrezzoVendita: solo se scritto a mano in rosso, altrimenti campo vuoto. Un trattino rosso significa cella vuota, non zero.
 
 COLONNA GIORNALINO
-Se accanto al prezzo rosso è scritta la sigla "gior" (anche se scritta in modo poco chiaro) → valore "rosso". Altrimenti campo vuoto. Se la parola "gior" è ambigua (potrebbe essere altro) → scrivi comunque "rosso" e segna daVerificare:true con motivoDubbio "annotazione 'gior' poco chiara".
+Se accanto al prezzo rosso è scritta la sigla "gior" (chiara) → valore "rosso". Altrimenti campo vuoto. Se la parola "gior" è ambigua → scrivi "rosso" e segnala daVerificare:true con motivoDubbio "annotazione 'gior' poco chiara".
 
 NOMI PRODOTTO
 Il simbolo " (pollici) va sempre sostituito con "poll" (es. 1/2" → 1/2 poll). Rimuovi eventuali codici numerici interni alla descrizione, mantieni il testo pulito.
@@ -354,20 +474,23 @@ Il simbolo " (pollici) va sempre sostituito con "poll" (es. 1/2" → 1/2 poll). 
 CASI SPECIALI
 - Riga "SOSTITUITO/SOSTITUZIONE ... VS/BOLLA" senza Qtà/Prezzo propri → Escludi
 - Riga "SOST./INTEGRAZIONE" al posto del prezzo → PrezzoAcquisto e PrezzoVendita vuoti salvo annotazione chiara
-- "VILLATA" → PrezzoVendita vuoto
+- "VILLATA" → PrezzoVendita vuoto, daVerificare:false
 - "MARCATO 2" → Ignora l'annotazione, procedi normalmente
 - Riga ripetuta identica → includi entrambe, non unificare
-- Codice colore non leggibile → scrivi "[DA VERIFICARE]" nel campo, MAI inventare
+- Codice colore non leggibile/coperto → scrivi "[DA VERIFICARE]" nel campo, daVerificare:true, gravita:"alta"
 
 VALIDAZIONE MATEMATICA INCROCIATA (tolleranza ±0,05€)
-Quando visibile la colonna "Importo" stampata: calcola Quantita × PrezzoAcquisto (al netto di sconti 5-, 10-, ecc.) e confronta con l'Importo. Differenze entro ±0,05€ sono normali arrotondamenti → NON segnalare. Solo differenze superiori indicano probabile errore di lettura → daVerificare:true, gravita:"alta", motivoDubbio con valore atteso e calcolato.
+Quando visibile la colonna "Importo" stampata: calcola Quantita × PrezzoAcquisto (al netto di sconti 5-, 10-, ecc.) e confronta con l'Importo. Differenze entro ±0,05€ sono normali arrotondamenti → NON segnalare. Solo differenze superiori → daVerificare:true, gravita:"alta", motivoDubbio con valore atteso e calcolato.
 
-GESTIONE DUBBI MULTIPLI
-Ogni riga con daVerificare:true deve avere motivoDubbio che spiega ESATTAMENTE cosa è ambiguo, indicando i valori alternativi considerati (es. "prima cifra ambigua 4 o 7: potrebbe essere 14,90 o 17,90"). Se un'annotazione manoscritta sembra collegata a un'altra riga, segnalalo esplicitamente.
+GESTIONE DUBBI
+Ogni riga con daVerificare:true deve avere motivoDubbio che spiega ESATTAMENTE cosa è ambiguo, indicando i valori alternativi considerati.
 
 GRAVITÀ
-- "bassa" → codice magazzino mancante, dato secondario non critico
-- "alta" → QUALSIASI prezzo di vendita scritto a mano (sempre, anche se sembra chiaro, se ha un minimo di ambiguità), discrepanza matematica, codice fornitore ambiguo, doppio prezzo rosso
+- "bassa" → codice magazzino mancante ma codice fornitore chiaro, dato secondario non critico
+- "alta" → prezzo di vendita ambiguo, discrepanza matematica, codice fornitore ambiguo, vendita sottocosto sospetta
+
+✅ AUTOREVISIONE FINALE
+Prima di restituire il JSON, rileggi le righe marcate daVerificare:true e chiediti: "Questa riga ha davvero un'ambiguità visibile e specifica, oppure la sto segnalando solo perché il prezzo è scritto a mano?". Se è "scritto a mano ma chiaro" → rimuovi il flag. Se hai una riga con grafia chiaramente ambigua data per affidabile → aggiungi il flag.
 
 Rispondi ESCLUSIVAMENTE con un oggetto JSON valido, senza markdown, senza testo prima o dopo, in questo formato esatto:
 {
@@ -393,12 +516,19 @@ Rispondi ESCLUSIVAMENTE con un oggetto JSON valido, senza markdown, senza testo 
 /* =========================================================
    STATO APP
    ========================================================= */
+const STORAGE_ROWS = 'rattazzi_rows_v1';
+const STORAGE_SESSIONS = 'rattazzi_sessions_v1';
+const STORAGE_GROUP_LABEL = 'rattazzi_group_label';
+const STORAGE_SETTINGS_KEY = 'rattazzi_apiKey';
+const STORAGE_SETTINGS_MODEL = 'rattazzi_model';
+
 const state = {
   images: [],
   rows: [],
+  filter: 'all',
   settings: {
-    apiKey: localStorage.getItem('rattazzi_apiKey') || '',
-    model: localStorage.getItem('rattazzi_model') || 'gemini-3.6-flash'
+    apiKey: localStorage.getItem(STORAGE_SETTINGS_KEY) || '',
+    model: localStorage.getItem(STORAGE_SETTINGS_MODEL) || 'gemini-3.6-flash'
   }
 };
 
@@ -413,6 +543,7 @@ const loaderTxt = $('loaderTxt');
 const resultsPanel = $('resultsPanel');
 const tbody = $('tbody');
 const toast = $('toast');
+const inpGroupLabel = $('inpGroupLabel');
 
 let toastTimer;
 function showToast(msg, type='') {
@@ -420,6 +551,72 @@ function showToast(msg, type='') {
   toast.className = 'toast show ' + type;
   clearTimeout(toastTimer);
   toastTimer = setTimeout(() => toast.className = 'toast ' + type, 2800);
+}
+
+/* =========================================================
+   PERSISTENZA
+   ========================================================= */
+let saveTimer;
+function scheduleSaveRows() {
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => {
+    try { localStorage.setItem(STORAGE_ROWS, JSON.stringify(state.rows)); }
+    catch(e) { console.warn('Save failed', e); }
+  }, 300);
+}
+
+function loadSavedRows() {
+  try {
+    const raw = localStorage.getItem(STORAGE_ROWS);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed : null;
+  } catch(e) { return null; }
+}
+
+function clearSavedRows() { localStorage.removeItem(STORAGE_ROWS); }
+
+/* ---------- Sessioni ---------- */
+function loadAllSessions() {
+  try {
+    const raw = localStorage.getItem(STORAGE_SESSIONS);
+    if (!raw) return [];
+    const arr = JSON.parse(raw);
+    return Array.isArray(arr) ? arr : [];
+  } catch(e) { return []; }
+}
+
+function saveAllSessions(sessions) {
+  try { localStorage.setItem(STORAGE_SESSIONS, JSON.stringify(sessions)); }
+  catch(e) {
+    if (e.name === 'QuotaExceededError') {
+      showToast('⚠️ Spazio esaurito: elimina qualche sessione vecchia', 'err');
+    } else { console.error(e); }
+  }
+}
+
+function saveCurrentSession(name) {
+  if (state.rows.length === 0) {
+    showToast('Nessuna riga da salvare', 'err');
+    return false;
+  }
+  const sessions = loadAllSessions();
+  const now = new Date();
+  const defaultName = 'Sessione ' + now.toLocaleDateString('it-IT') + ' ' + now.toLocaleTimeString('it-IT', {hour:'2-digit', minute:'2-digit'});
+  sessions.unshift({
+    id: 'sess_' + Date.now() + '_' + Math.random().toString(36).slice(2,6),
+    name: (name || defaultName).trim(),
+    date: now.toISOString(),
+    rows: JSON.parse(JSON.stringify(state.rows))
+  });
+  if (sessions.length > 30) sessions.length = 30;
+  saveAllSessions(sessions);
+  return true;
+}
+
+function deleteSession(id) {
+  const sessions = loadAllSessions().filter(s => s.id !== id);
+  saveAllSessions(sessions);
 }
 
 /* =========================================================
@@ -484,23 +681,87 @@ function renderThumbs() {
     const div = document.createElement('div');
     div.className = 'thumb';
     div.innerHTML = `
-      <img src="${im.dataUrl}" alt="">
+      <img src="${im.dataUrl}" alt="" data-zoom="${i}">
       <div class="num">${i+1}</div>
-      <button class="rm" data-id="${im.id}">✕</button>
+      <button class="rm" data-id="${im.id}" title="Rimuovi">✕</button>
+      <div class="movers">
+        <button data-move="${im.id}" data-dir="-1" ${i===0?'disabled':''} title="Sposta prima">◀</button>
+        <button data-move="${im.id}" data-dir="1" ${i===state.images.length-1?'disabled':''} title="Sposta dopo">▶</button>
+      </div>
     `;
     thumbs.appendChild(div);
   });
+
   thumbs.querySelectorAll('.rm').forEach(b => {
-    b.addEventListener('click', () => {
+    b.addEventListener('click', e => {
+      e.stopPropagation();
       state.images = state.images.filter(x => x.id !== b.dataset.id);
       renderThumbs();
     });
   });
+
+  thumbs.querySelectorAll('[data-move]').forEach(b => {
+    b.addEventListener('click', e => {
+      e.stopPropagation();
+      moveImage(b.dataset.move, parseInt(b.dataset.dir, 10));
+    });
+  });
+
+  thumbs.querySelectorAll('img[data-zoom]').forEach(img => {
+    img.addEventListener('click', () => openZoom(state.images[+img.dataset.zoom].dataUrl));
+  });
+
   btnExtract.disabled = state.images.length === 0;
 }
 
+function moveImage(id, dir) {
+  const idx = state.images.findIndex(x => x.id === id);
+  if (idx < 0) return;
+  const newIdx = idx + dir;
+  if (newIdx < 0 || newIdx >= state.images.length) return;
+  const [item] = state.images.splice(idx, 1);
+  state.images.splice(newIdx, 0, item);
+  renderThumbs();
+}
+
 /* =========================================================
-   ESTRAZIONE (Google Gemini)
+   ZOOM
+   ========================================================= */
+const zoomModal = $('zoomModal');
+const zoomImg = $('zoomImg');
+function openZoom(src) { zoomImg.src = src; zoomModal.classList.add('show'); }
+zoomModal.addEventListener('click', () => { zoomModal.classList.remove('show'); zoomImg.src = ''; });
+
+/* =========================================================
+   RETRY AUTOMATICO
+   ========================================================= */
+async function fetchWithRetry(url, options, maxRetries = 3) {
+  let lastErr;
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      const resp = await fetch(url, options);
+      if ([502, 503, 504, 429].includes(resp.status)) {
+        const wait = attempt * 4;
+        loaderTxt.textContent = `⏳ Server sovraccarico. Riprovo tra ${wait}s… (${attempt}/${maxRetries})`;
+        await new Promise(r => setTimeout(r, wait * 1000));
+        lastErr = new Error(`HTTP ${resp.status}`);
+        continue;
+      }
+      return resp;
+    } catch (e) {
+      lastErr = e;
+      if (attempt < maxRetries) {
+        const wait = attempt * 3;
+        loaderTxt.textContent = `⚠️ Errore di rete. Riprovo tra ${wait}s… (${attempt}/${maxRetries})`;
+        await new Promise(r => setTimeout(r, wait * 1000));
+      }
+    }
+  }
+  throw lastErr || new Error('Retry esauriti');
+}
+
+/* =========================================================
+   ESTRAZIONE
    ========================================================= */
 btnExtract.addEventListener('click', extract);
 
@@ -516,38 +777,29 @@ async function extract() {
   loader.classList.add('show');
   loaderTxt.textContent = `Analisi di ${state.images.length} foto con ${state.settings.model}…`;
 
+  const gruppo = inpGroupLabel.value.trim();
+  localStorage.setItem(STORAGE_GROUP_LABEL, gruppo);
+
   try {
     const model = state.settings.model;
     const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(state.settings.apiKey)}`;
 
     const parts = [
-      { text: `Analizza ${state.images.length} fattura/e Viglietta nell'ordine mostrato. Restituisci il JSON come da istruzioni. Ricorda: la prudenza vince sulla completezza, segnala tutti i prezzi a mano anche solo minimamente ambigui.` }
+      { text: `Analizza ${state.images.length} fattura/e Viglietta nell'ordine mostrato. Restituisci il JSON come da istruzioni. Equilibrio: segnala solo i prezzi con dubbio REALE e specifico, NON tutti quelli scritti a mano.` }
     ];
     for (const im of state.images) {
       const m = im.dataUrl.match(/^data:(image\/[a-zA-Z+]+);base64,(.+)$/);
       if (!m) continue;
-      parts.push({
-        inline_data: {
-          mime_type: m[1],
-          data: m[2]
-        }
-      });
+      parts.push({ inline_data: { mime_type: m[1], data: m[2] } });
     }
 
     const body = {
-      system_instruction: {
-        parts: [{ text: SYSTEM_PROMPT }]
-      },
-      contents: [
-        { role: 'user', parts }
-      ],
-      generationConfig: {
-        temperature: 0,
-        responseMimeType: 'application/json'
-      }
+      system_instruction: { parts: [{ text: SYSTEM_PROMPT }] },
+      contents: [{ role: 'user', parts }],
+      generationConfig: { temperature: 0, responseMimeType: 'application/json' }
     };
 
-    const resp = await fetch(endpoint, {
+    const resp = await fetchWithRetry(endpoint, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body)
@@ -571,11 +823,13 @@ async function extract() {
       return;
     }
 
-    state.rows = parsed.righe || [];
+    // Aggiungi il campo gruppo a ciascuna riga
+    state.rows = (parsed.righe || []).map(r => ({ ...r, gruppo }));
+    scheduleSaveRows();
     renderRows();
     resultsPanel.style.display = 'block';
     resultsPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    showToast(`✓ Estratte ${state.rows.length} righe`, 'ok');
+    showToast(`✓ Estratte ${state.rows.length} righe${gruppo ? ' · ' + gruppo : ''}`, 'ok');
 
   } catch (err) {
     console.error(err);
@@ -587,45 +841,105 @@ async function extract() {
 }
 
 /* =========================================================
-   TABELLA RISULTATI
+   FILTRO
    ========================================================= */
+$('filterBar').addEventListener('click', e => {
+  const btn = e.target.closest('button[data-filter]');
+  if (!btn) return;
+  state.filter = btn.dataset.filter;
+  $('filterBar').querySelectorAll('button').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderRows();
+});
+
+function rowMatchesFilter(r) {
+  if (state.filter === 'all') return true;
+  if (state.filter === 'alta') return r.daVerificare && r.gravita === 'alta';
+  if (state.filter === 'bassa') return r.daVerificare && r.gravita === 'bassa';
+  if (state.filter === 'dub') return r.daVerificare;
+  if (state.filter === 'ok') return !r.daVerificare;
+  return true;
+}
+
+/* =========================================================
+   TABELLA (con raggruppamento)
+   ========================================================= */
+function parseNum(v) {
+  if (v == null) return 0;
+  const s = String(v).replace(/\s/g, '').replace(',', '.');
+  const n = parseFloat(s);
+  return isNaN(n) ? 0 : n;
+}
+
+function fmtEuro(n) { return n.toFixed(2).replace('.', ','); }
+
+function rowTotal(r) { return parseNum(r.quantita) * parseNum(r.prezzoAcquisto); }
+
 function renderRows() {
   tbody.innerHTML = '';
-  state.rows.forEach((r, i) => {
-    const tr = document.createElement('tr');
-    if (r.daVerificare) {
-      tr.className = r.gravita === 'alta' ? 'dub-alta' : 'dub-bassa';
-    }
-    const badge = r.daVerificare
-      ? `<span class="row-badge badge-${r.gravita === 'alta' ? 'alta' : 'bassa'}" title="${escapeAttr(r.motivoDubbio||'')}">${r.gravita === 'alta' ? 'ALTA' : 'BASSA'}</span>`
-      : '<span style="color:var(--green)">✓</span>';
+  const visible = state.rows.map((r, i) => ({ ...r, _idx: i })).filter(rowMatchesFilter);
 
-    tr.innerHTML = `
-      <td style="color:var(--text-dim);text-align:center">${i+1}</td>
-      <td><input data-i="${i}" data-f="nomeProdotto" value="${escapeAttr(r.nomeProdotto||'')}"></td>
-      <td><input data-i="${i}" data-f="codiceFornitore" value="${escapeAttr(r.codiceFornitore||'')}"></td>
-      <td><input data-i="${i}" data-f="codiceMagazzino" value="${escapeAttr(r.codiceMagazzino||'')}"></td>
-      <td class="center"><input data-i="${i}" data-f="unitaMisura" value="${escapeAttr(r.unitaMisura||'')}"></td>
-      <td class="num"><input data-i="${i}" data-f="quantita" value="${escapeAttr(r.quantita||'')}"></td>
-      <td class="num"><input data-i="${i}" data-f="prezzoAcquisto" value="${escapeAttr(r.prezzoAcquisto||'')}"></td>
-      <td class="num price-v"><input data-i="${i}" data-f="prezzoVendita" value="${escapeAttr(r.prezzoVendita||'')}"></td>
-      <td class="center"><input data-i="${i}" data-f="giornalino" value="${escapeAttr(r.giornalino||'')}"></td>
-      <td class="center">${badge}</td>
-      <td class="center"><button class="btn-danger btn-icon" style="padding:4px;width:26px;height:26px" data-del="${i}">✕</button></td>
-    `;
+  if (visible.length === 0 && state.rows.length > 0) {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td colspan="12" style="text-align:center;padding:30px;color:var(--text-dim)">Nessuna riga corrisponde al filtro selezionato</td>`;
     tbody.appendChild(tr);
+    updateStats();
+    return;
+  }
+
+  // Precalcola il conteggio per gruppo (sul totale, non sui filtrati)
+  const groupCounts = {};
+  state.rows.forEach(r => {
+    const g = r.gruppo || '';
+    if (g) groupCounts[g] = (groupCounts[g] || 0) + 1;
   });
 
-  tbody.querySelectorAll('input').forEach(inp => {
+  let lastGroup = '__FIRST__';
+  visible.forEach(r => {
+    const g = r.gruppo || '';
+    if (g !== lastGroup) {
+      if (g) {
+        const headerRow = document.createElement('tr');
+        headerRow.className = 'group-header';
+        headerRow.innerHTML = `<td colspan="12">🗂️ ${escapeHtml(g)}<span class="count">— ${groupCounts[g]} righe</span></td>`;
+        tbody.appendChild(headerRow);
+      }
+      lastGroup = g;
+    }
+    appendRow(r);
+  });
+
+  // Wire eventi
+  tbody.querySelectorAll('input[data-i]').forEach(inp => {
     inp.addEventListener('input', e => {
       const i = +e.target.dataset.i;
       const f = e.target.dataset.f;
       state.rows[i][f] = e.target.value;
+      scheduleSaveRows();
+      if (f === 'quantita' || f === 'prezzoAcquisto') {
+        const cell = tbody.querySelector(`[data-tot="${i}"]`);
+        if (cell) cell.textContent = fmtEuro(rowTotal(state.rows[i])) + ' €';
+        updateStats();
+      }
     });
   });
+
+  tbody.querySelectorAll('[data-dup]').forEach(btn => {
+    btn.addEventListener('click', e => {
+      const i = +e.target.closest('[data-dup]').dataset.dup;
+      const copy = JSON.parse(JSON.stringify(state.rows[i]));
+      state.rows.splice(i + 1, 0, copy);
+      scheduleSaveRows();
+      renderRows();
+      showToast('📋 Riga duplicata');
+    });
+  });
+
   tbody.querySelectorAll('[data-del]').forEach(btn => {
     btn.addEventListener('click', e => {
-      state.rows.splice(+e.target.dataset.del, 1);
+      const i = +e.target.closest('[data-del]').dataset.del;
+      state.rows.splice(i, 1);
+      scheduleSaveRows();
       renderRows();
     });
   });
@@ -633,12 +947,47 @@ function renderRows() {
   updateStats();
 }
 
+function appendRow(r) {
+  const i = r._idx;
+  const tr = document.createElement('tr');
+  if (r.daVerificare) tr.className = r.gravita === 'alta' ? 'dub-alta' : 'dub-bassa';
+
+  const badge = r.daVerificare
+    ? `<span class="row-badge badge-${r.gravita === 'alta' ? 'alta' : 'bassa'}" title="${escapeAttr(r.motivoDubbio||'')}">${r.gravita === 'alta' ? 'ALTA' : 'BASSA'}</span>`
+    : '<span class="badge-ok">✓</span>';
+
+  tr.innerHTML = `
+    <td style="color:var(--text-dim);text-align:center">${i+1}</td>
+    <td><input data-i="${i}" data-f="nomeProdotto" value="${escapeAttr(r.nomeProdotto||'')}"></td>
+    <td><input data-i="${i}" data-f="codiceFornitore" value="${escapeAttr(r.codiceFornitore||'')}"></td>
+    <td><input data-i="${i}" data-f="codiceMagazzino" value="${escapeAttr(r.codiceMagazzino||'')}"></td>
+    <td class="center"><input data-i="${i}" data-f="unitaMisura" value="${escapeAttr(r.unitaMisura||'')}"></td>
+    <td class="num"><input data-i="${i}" data-f="quantita" value="${escapeAttr(r.quantita||'')}"></td>
+    <td class="num"><input data-i="${i}" data-f="prezzoAcquisto" value="${escapeAttr(r.prezzoAcquisto||'')}"></td>
+    <td class="num price-v"><input data-i="${i}" data-f="prezzoVendita" value="${escapeAttr(r.prezzoVendita||'')}"></td>
+    <td class="center"><input data-i="${i}" data-f="giornalino" value="${escapeAttr(r.giornalino||'')}"></td>
+    <td class="total-cell" data-tot="${i}">${fmtEuro(rowTotal(r))} €</td>
+    <td class="center">${badge}</td>
+    <td class="center" style="display:flex;gap:4px;justify-content:center">
+      <button class="btn-ghost btn-icon" style="padding:4px;width:26px;height:26px;font-size:12px" data-dup="${i}" title="Duplica riga">📋</button>
+      <button class="btn-danger btn-icon" style="padding:4px;width:26px;height:26px;font-size:12px" data-del="${i}" title="Elimina">✕</button>
+    </td>
+  `;
+  tbody.appendChild(tr);
+}
+
 function updateStats() {
   const tot = state.rows.length;
-  const dub = state.rows.filter(r => r.daVerificare).length;
+  const alta = state.rows.filter(r => r.daVerificare && r.gravita === 'alta').length;
+  const bassa = state.rows.filter(r => r.daVerificare && r.gravita === 'bassa').length;
+  const ok = tot - alta - bassa;
+  const totalEuro = state.rows.reduce((s, r) => s + rowTotal(r), 0);
+
   $('stRows').textContent = tot;
-  $('stDub').textContent = dub;
-  $('stOk').textContent = tot - dub;
+  $('stAlta').textContent = alta;
+  $('stBassa').textContent = bassa;
+  $('stOk').textContent = ok;
+  $('stTot').textContent = fmtEuro(totalEuro);
 
   const notesBox = $('notesBox');
   const dubRows = state.rows.map((r,i)=>({...r,idx:i+1})).filter(r=>r.daVerificare);
@@ -651,6 +1000,24 @@ function updateStats() {
 }
 
 /* =========================================================
+   AGGIUNGI RIGA
+   ========================================================= */
+$('btnAddRow').addEventListener('click', () => {
+  const gruppo = inpGroupLabel.value.trim();
+  state.rows.push({
+    nomeProdotto: '', codiceFornitore: '', codiceMagazzino: '',
+    unitaMisura: '', quantita: '', prezzoAcquisto: '', prezzoVendita: '',
+    giornalino: '', daVerificare: false, motivoDubbio: '', gravita: '',
+    gruppo
+  });
+  scheduleSaveRows();
+  renderRows();
+  const lastRow = tbody.querySelector('tr:last-child');
+  if (lastRow) lastRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  showToast('➕ Riga aggiunta');
+});
+
+/* =========================================================
    CSV
    ========================================================= */
 const CSV_HEADER = 'NomeProdotto;CodiceFornitore;CodiceMagazzino;UnitaMisura;Quantita;PrezzoAcquisto;PrezzoVendita;Giornalino';
@@ -659,24 +1026,14 @@ function buildCSV() {
   const lines = [CSV_HEADER];
   state.rows.forEach(r => {
     lines.push([
-      csvCell(r.nomeProdotto),
-      csvCell(r.codiceFornitore),
-      csvCell(r.codiceMagazzino),
-      csvCell(r.unitaMisura),
-      csvCell(r.quantita),
-      csvCell(r.prezzoAcquisto),
-      csvCell(r.prezzoVendita),
-      csvCell(r.giornalino)
+      csvCell(r.nomeProdotto), csvCell(r.codiceFornitore), csvCell(r.codiceMagazzino),
+      csvCell(r.unitaMisura), csvCell(r.quantita), csvCell(r.prezzoAcquisto),
+      csvCell(r.prezzoVendita), csvCell(r.giornalino)
     ].join(';'));
   });
   return lines.join('\n');
 }
-
-function csvCell(v) {
-  v = (v == null ? '' : String(v));
-  v = v.replace(/[\r\n;]/g, ' ').trim();
-  return v;
-}
+function csvCell(v) { return (v == null ? '' : String(v)).replace(/[\r\n;]/g, ' ').trim(); }
 
 $('btnCsv').addEventListener('click', () => {
   if (!state.rows.length) return showToast('Nessuna riga da esportare', 'err');
@@ -684,8 +1041,11 @@ $('btnCsv').addEventListener('click', () => {
   const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
-  const ts = new Date().toISOString().slice(0,10);
-  a.href = url; a.download = `fatture_viglietta_${ts}.csv`;
+  const now = new Date();
+  const ts = now.toISOString().slice(0,10);
+  const hh = String(now.getHours()).padStart(2,'0');
+  const mm = String(now.getMinutes()).padStart(2,'0');
+  a.href = url; a.download = `fatture_viglietta_${ts}_${hh}${mm}.csv`;
   document.body.appendChild(a); a.click(); a.remove();
   URL.revokeObjectURL(url);
   showToast('✓ CSV scaricato', 'ok');
@@ -700,19 +1060,103 @@ $('btnCopy').addEventListener('click', async () => {
 });
 
 $('btnClearRows').addEventListener('click', () => {
+  if (!confirm('Svuotare tutte le righe? Non si può annullare.')) return;
   state.rows = [];
+  clearSavedRows();
   renderRows();
   resultsPanel.style.display = 'none';
+  hideRestoreBanner();
 });
 
 $('btnClear').addEventListener('click', () => {
+  if (!confirm('Pulire foto e righe? Non si può annullare.')) return;
   state.images = [];
   state.rows = [];
+  clearSavedRows();
   renderThumbs();
   renderRows();
   resultsPanel.style.display = 'none';
+  hideRestoreBanner();
   showToast('Pulito');
 });
+
+/* =========================================================
+   STORICO SESSIONI
+   ========================================================= */
+$('btnOpenHistory').addEventListener('click', () => {
+  renderHistory();
+  $('historyModal').classList.add('show');
+});
+$('btnCloseHistory').addEventListener('click', () => $('historyModal').classList.remove('show'));
+$('historyModal').addEventListener('click', e => {
+  if (e.target === $('historyModal')) $('historyModal').classList.remove('show');
+});
+
+$('btnSaveCurrentSession').addEventListener('click', () => {
+  const name = $('inpSessionName').value.trim();
+  if (saveCurrentSession(name)) {
+    $('inpSessionName').value = '';
+    renderHistory();
+    showToast('✓ Sessione salvata', 'ok');
+  }
+});
+
+function renderHistory() {
+  const sessions = loadAllSessions();
+  const list = $('sessionList');
+
+  if (sessions.length === 0) {
+    list.innerHTML = '<div class="empty-state">Nessuna sessione salvata. Compila il nome e clicca 💾 Salva per salvare le righe attuali.</div>';
+    return;
+  }
+
+  list.innerHTML = sessions.map(s => `
+    <div class="session-item">
+      <div class="info">
+        <div class="name">${escapeHtml(s.name)}</div>
+        <div class="meta">${s.rows.length} righe · ${new Date(s.date).toLocaleString('it-IT')}</div>
+      </div>
+      <div class="actions">
+        <button class="btn-primary" data-load="${s.id}" data-mode="replace">📥 Apri</button>
+        <button class="btn-ghost" data-load="${s.id}" data-mode="append">➕ Aggiungi</button>
+        <button class="btn-danger" data-del="${s.id}">🗑️</button>
+      </div>
+    </div>
+  `).join('');
+
+  list.querySelectorAll('[data-load]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      loadSession(btn.dataset.load, btn.dataset.mode);
+    });
+  });
+  list.querySelectorAll('[data-del]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (!confirm('Eliminare questa sessione?')) return;
+      deleteSession(btn.dataset.del);
+      renderHistory();
+      showToast('Sessione eliminata');
+    });
+  });
+}
+
+function loadSession(id, mode) {
+  const s = loadAllSessions().find(x => x.id === id);
+  if (!s) return;
+
+  if (mode === 'replace') {
+    if (state.rows.length > 0 && !confirm(`Sostituire le ${state.rows.length} righe attuali con quelle di "${s.name}"?`)) return;
+    state.rows = JSON.parse(JSON.stringify(s.rows));
+  } else {
+    state.rows = state.rows.concat(JSON.parse(JSON.stringify(s.rows)));
+  }
+
+  scheduleSaveRows();
+  renderRows();
+  resultsPanel.style.display = 'block';
+  $('historyModal').classList.remove('show');
+  resultsPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  showToast(`✓ ${mode === 'replace' ? 'Aperta' : 'Aggiunta'} sessione "${s.name}"`, 'ok');
+}
 
 /* =========================================================
    IMPOSTAZIONI
@@ -729,10 +1173,15 @@ $('modalBg').addEventListener('click', e => { if (e.target === $('modalBg')) $('
 $('btnSaveSettings').addEventListener('click', () => {
   state.settings.apiKey = $('inpKey').value.trim();
   state.settings.model = $('inpModel').value;
-  localStorage.setItem('rattazzi_apiKey', state.settings.apiKey);
-  localStorage.setItem('rattazzi_model', state.settings.model);
+  localStorage.setItem(STORAGE_SETTINGS_KEY, state.settings.apiKey);
+  localStorage.setItem(STORAGE_SETTINGS_MODEL, state.settings.model);
   $('modalBg').classList.remove('show');
   showToast('✓ Impostazioni salvate', 'ok');
+});
+
+/* salva automaticamente l'etichetta gruppo quando cambia */
+inpGroupLabel.addEventListener('input', () => {
+  localStorage.setItem(STORAGE_GROUP_LABEL, inpGroupLabel.value);
 });
 
 /* =========================================================
@@ -742,28 +1191,42 @@ function escapeAttr(s){ return String(s).replace(/&/g,'&amp;').replace(/"/g,'&qu
 function escapeHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
 /* =========================================================
-   PWA — Service Worker
+   RESTORE BANNER
+   ========================================================= */
+function showRestoreBanner(count) {
+  const b = $('restoreBanner');
+  b.innerHTML = `💾 <b>Righe ripristinate</b> (${count}) dall'ultima sessione. Le foto vanno ricaricate se ti servono.
+    <button class="btn-ghost" id="btnDiscardRestore" style="margin-left:10px;padding:4px 10px;font-size:11px">🗑️ Scarta</button>`;
+  b.classList.add('show');
+  setTimeout(() => {
+    const btn = $('btnDiscardRestore');
+    if (btn) btn.addEventListener('click', () => {
+      state.rows = [];
+      clearSavedRows();
+      renderRows();
+      resultsPanel.style.display = 'none';
+      hideRestoreBanner();
+    });
+  }, 0);
+}
+function hideRestoreBanner() { $('restoreBanner').classList.remove('show'); }
+
+/* =========================================================
+   PWA
    ========================================================= */
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js').catch(err => {
-      console.warn('SW non registrato (richiede HTTPS o localhost):', err);
-    });
+    navigator.serviceWorker.register('./sw.js').catch(err => console.warn('SW', err));
   });
 }
 
-/* =========================================================
-   PWA — Prompt di installazione
-   ========================================================= */
 let deferredPrompt = null;
 const btnInstall = $('btnInstall');
-
 window.addEventListener('beforeinstallprompt', e => {
   e.preventDefault();
   deferredPrompt = e;
   btnInstall.style.display = 'inline-flex';
 });
-
 btnInstall.addEventListener('click', async () => {
   if (!deferredPrompt) return;
   deferredPrompt.prompt();
@@ -772,30 +1235,43 @@ btnInstall.addEventListener('click', async () => {
   btnInstall.style.display = 'none';
   if (outcome === 'accepted') showToast('✓ App installata', 'ok');
 });
-
 window.addEventListener('appinstalled', () => {
   btnInstall.style.display = 'none';
   deferredPrompt = null;
   showToast('✓ App installata', 'ok');
 });
 
-/* =========================================================
-   PWA — Banner istruzioni iOS
-   ========================================================= */
 const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
 const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
 const iosBannerDismissed = localStorage.getItem('rattazzi_ios_banner_dismissed') === '1';
 
-if (isIOS && !isStandalone && !iosBannerDismissed) {
-  $('iosBanner').classList.add('show');
-}
+if (isIOS && !isStandalone && !iosBannerDismissed) $('iosBanner').classList.add('show');
 $('iosClose').addEventListener('click', () => {
   $('iosBanner').classList.remove('show');
   localStorage.setItem('rattazzi_ios_banner_dismissed', '1');
 });
 
-/* primo avvio */
-if (!state.settings.apiKey && !isStandalone) setTimeout(openSettings, 500);
+/* =========================================================
+   AVVIO
+   ========================================================= */
+(function init() {
+  // Ripristina etichetta gruppo
+  const savedLabel = localStorage.getItem(STORAGE_GROUP_LABEL);
+  if (savedLabel) inpGroupLabel.value = savedLabel;
+
+  // Ripristina righe
+  const saved = loadSavedRows();
+  if (saved && saved.length > 0) {
+    state.rows = saved;
+    renderRows();
+    resultsPanel.style.display = 'block';
+    showRestoreBanner(saved.length);
+  } else {
+    renderRows();
+  }
+
+  if (!state.settings.apiKey && !isStandalone) setTimeout(openSettings, 500);
+})();
 </script>
 </body>
 </html>
